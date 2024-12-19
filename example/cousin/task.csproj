@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net6.0;net472</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <MSBuildPackageVersion>17.3.2</MSBuildPackageVersion>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+  
+  <ItemGroup>    
+    <PackageReference Include="Microsoft.Build" IncludeAssets="Compile" Version="$(MSBuildPackageVersion)" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" IncludeAssets="Compile" Version="$(MSBuildPackageVersion)" />
+
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="6.0.0" />
+    <!-- <PackageReference Include="System.Runtime.Caching" Version="6.0.0" /> -->
+  </ItemGroup>
+
+</Project>
