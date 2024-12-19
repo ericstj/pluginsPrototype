@@ -13,8 +13,10 @@
     <PackageReference Include="Microsoft.Build" IncludeAssets="Compile" PrivateAssets="All" Version="$(MSBuildPackageVersion)" />
     <PackageReference Include="Microsoft.Build.Tasks.Core" IncludeAssets="Compile" PrivateAssets="All" Version="$(MSBuildPackageVersion)" />
 
-    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="6.0.0" />
-    <!-- <PackageReference Include="System.Runtime.Caching" Version="6.0.0" /> -->
+    <!-- Doesn't reference a newer version of Json, but the older reference causes MSBuilds to go app-local -->
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="5.0.0" />
+    <!-- Similar case, but more apparent on .NET 6.0 since it brings oob assemblies -->
+    <!-- <PackageReference Include="System.Runtime.Caching" Version="5.0.0" /> -->
   </ItemGroup>
 
 </Project>
