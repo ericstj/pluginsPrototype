@@ -10,8 +10,8 @@
   </PropertyGroup>
   
   <ItemGroup>    
-    <PackageReference Include="Microsoft.Build" IncludeAssets="Compile" Version="$(MSBuildPackageVersion)" />
-    <PackageReference Include="Microsoft.Build.Tasks.Core" IncludeAssets="Compile" Version="$(MSBuildPackageVersion)" />
+    <PackageReference Include="Microsoft.Build" IncludeAssets="Compile" PrivateAssets="All" Version="$(MSBuildPackageVersion)" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" IncludeAssets="Compile" PrivateAssets="All" Version="$(MSBuildPackageVersion)" />
 
     <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="6.0.0" />
     <!-- <PackageReference Include="System.Runtime.Caching" Version="6.0.0" /> -->
