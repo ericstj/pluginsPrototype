@@ -1,0 +1,66 @@
+﻿<Project Sdk="Microsoft.Build.NoTargets">
+  <PropertyGroup>
+    <TargetFrameworks>net6.0;net472</TargetFrameworks>
+    <Description>Provides references and other functionality for MSBuild tasks.</Description>
+    <PackageTags>MSBuild MSBuildSdk MSBuildTask task</PackageTags>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageType>MSBuildSdk</PackageType>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+    <MSBuildPackageVersion>17.3.2</MSBuildPackageVersion>
+
+    <TargetsForTfmSpecificContentInPackage>IncludeReferencesInPackage;GenerateBuildTargets</TargetsForTfmSpecificContentInPackage>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Build" IncludeAssets="Compile" Version="$(MSBuildPackageVersion)" />
+    <PackageReference Include="Microsoft.Build.Framework" IncludeAssets="Compile" Version="$(MSBuildPackageVersion)" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" IncludeAssets="Compile" Version="$(MSBuildPackageVersion)" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" IncludeAssets="Compile" Version="$(MSBuildPackageVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.DotNet.Build.Tasks.Templating" Version="9.0.0-beta.24516.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Sdk.props;Sdk.targets" PackagePath="Sdk/" />
+  </ItemGroup>
+
+  <Target Name="IncludeReferencesInPackage" DependsOnTargets="ResolveReferences">
+    <!-- Copy all references resolved into the package in a framework specific folder.
+         These are only for reference, though many might be implementation assembles.
+         If we wanted to improve this, we could rewrite as reference assemblies with tool. -->
+    <ItemGroup>
+      <TfmSpecificPackageFile Include="@(ReferencePath->'%(FullPath)')" PackagePath="build/$(TargetFramework)/ref" />
+      <_DocFiles Include="@(ReferencePath->'%(RootDir)%(Directory)%(FileName).xml')"  PackagePath="build/$(TargetFramework)/ref" />
+      <TfmSpecificPackageFile Include="@(_DocFiles->Exists())" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="GenerateBuildTargets" DependsOnTargets="ResolveReferences">
+    <!-- Generate the framework specific build targets that will include references and 
+         add PrunePackage entries to drop those packages should they be brought in elsewhere. -->
+    <ItemGroup>
+      <_toPrune Include="@(ReferencePath)" Condition="'%(ReferencePath.NuGetPackageId)' != ''" />
+    </ItemGroup>
+    
+    <PropertyGroup>
+      <_prunePackageReferences>@(_toPrune->'&lt;PrunePackageReference Include="%(NuGetPackageId)" Version="%(NuGetPackageVersion)" />', '%0a    ')</_prunePackageReferences>
+      <_referencePaths Condition="'%(ReferencePath.Extension)' == '.dll'" >@(ReferencePath->'%24(MSBuildThisFileDirectory)ref/%(FileName)%(Extension)', '%3B')</_referencePaths>
+    </PropertyGroup>
+
+    <!-- Consider: validate that MSBuild packages are not referenced at all -->
+
+    <GenerateFileFromTemplate TemplateFile="build/$(MSBuildProjectName).template.targets"
+                              OutputPath="$(IntermediateOutputPath)$(MSBuildProjectName).targets"
+                              Properties="NuGetPackageId=$(PackageId);NuGetPackageVersion=$(PackageVersion);ReferencePaths=$(_referencePaths);PrunePackageReferences=$(_prunePackageReferences)" >
+      <Output TaskParameter="ResolvedOutputPath" ItemName="FileWrites" />
+      <Output TaskParameter="ResolvedOutputPath" ItemName="_buildTargets" />
+    </GenerateFileFromTemplate>
+
+    <ItemGroup>
+      <TfmSpecificPackageFile Include="@(_buildTargets)" PackagePath="build/$(TargetFramework)" />
+    </ItemGroup>
+
+  </Target>
+</Project>

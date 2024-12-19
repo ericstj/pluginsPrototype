@@ -1,0 +1,13 @@
+<Project>
+  <ItemGroup>
+    ${PrunePackageReferences}
+    <ReferencePath Include="${ReferencePaths}">
+        <!-- Private = false to make these reference only -->
+        <Private>false</Private>
+        <!-- hide these from Assemblies view in Solution Explorer, they will be shown under packages -->
+        <Visible>false</Visible>
+        <NuGetPackageId>${NuGetPackageId}</NuGetPackageId>
+        <NuGetPackageVersion>${NuGetPackageVersion}</NuGetPackageVersion>
+    </ReferencePath>
+  </ItemGroup>
+</Project>

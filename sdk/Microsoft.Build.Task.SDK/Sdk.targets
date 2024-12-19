@@ -1,0 +1,19 @@
+<Project InitialTargets="_CheckMicrosoftBuildTaskSDKCompatibleFramework" >
+
+  <PropertyGroup>
+    <_sdkBuildTargets Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net472'))">../build/net472/Microsoft.Build.Task.SDK.targets</_sdkBuildTargets>
+    <_sdkBuildTargets Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net6.0'))">../build/net6.0/Microsoft.Build.Task.SDK.targets</_sdkBuildTargets>    
+  </PropertyGroup>
+
+  <Target Name="_CheckMicrosoftBuildTaskSDKCompatibleFramework" >
+    <Error Condition="'$(_sdkBuildTargets)' == '' AND '$(TargetFramework)' != ''"
+           Text="The target framework '$(TargetFramework)' is not compatible with the Microsoft.Build.Task.SDK." />
+
+    <!-- Consider checking that the project multi-targets to precise framework versions for the most coverage -->
+  </Target>
+
+  <Import Project="$(_sdkBuildTargets)" Condition="'$(_sdkBuildTargets)' != ''" />
+
+  <!-- Add more common functionality for tasks, like packaging behavior -->
+
+</Project>

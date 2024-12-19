@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.Build.NoTargets" DefaultTargets="Test">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <TaskPath Condition="'$(MSBuildRuntimeType)' == 'Core'">..\task\bin\Debug\net6.0\task.dll</TaskPath>
+    <TaskPath Condition="'$(MSBuildRuntimeType)' == 'Full'">..\task\bin\Debug\net472\task.dll</TaskPath>
+  </PropertyGroup>
+
+  <UsingTask TaskName="MyTask" AssemblyFile="$(TaskPath)" />
+
+  <Target Name="Test">
+    <MyTask />
+  </Target>
+
+</Project>
