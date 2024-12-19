@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net6.0;net472</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+  
+  <ItemGroup>    
+    <PackageReference Include="Microsoft.Build" ReferenceOnly="True" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" ReferenceOnly="True" />
+    <!-- This could also be built as a meta-package.
+       These packages and their closure would be marked as ReferenceOnly and brought in as Compile only packages
+       NuGet Audit could be changed to ignore packages only brought in this way.
+       ReferenceOnly packages should not be touched by CPM.
+       ReferenceOnly packages should not be changed from compile to runtime by cousin dependencies of <= versions.
+       ReferenceOnly packages could be changed to runtime by direct or indirect non-ReferenceOnly packages of > versions.
+       When a package is ReferenceOnly it should not be present in the deps file. 
+       
+       
+       I describe these as being tied to ReferenceOnly, but we could instead have some new flag that gets paired with IncludeAssets.
+       For exmple we could just make Audit ignore IncludeAssets="Compile" and and then make a new setting PreferLocalVersion or
+       something that controlled the CPM and graph composition behavior.  
+       We could make the SDK fix deps files for all cases where there is no runtime assembly.
+
+
+       It could be interesting to pair with this the concept of "RequiredAssets" which might be an asset type which is enforced on reference.
+       That way someone could decide to mark a package IncludeAssets="Compile" PreferLocalVersion="True" RequiredAssets="Runtime".
+       
+       -->
+    
+
+    
+
+  </ItemGroup>
+
+</Project>
